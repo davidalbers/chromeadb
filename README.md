@@ -1,17 +1,19 @@
 ChromeADB
 =========
 
-[![Build Status](https://travis-ci.org/importre/chromeadb.svg?branch=master)](https://travis-ci.org/importre/chromeadb)
-[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ChromeADB-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/863)
-
 **ChromeADB** is a Chrome ADB (Android Debug Bridge) client.
+
+I added some extra functionality to it:
+* Launching the adb monkey tool
+* Pinning apps
+* Dumping logcat
+
+
 
 When launched, you can see all devices connected to your machine if the ADB connection is successful.  
 Click a device that you want to control or monitor. And enjoy!
 
-![screenshot](https://raw.github.com/importre/chromeadb/master/src/assets/chromeadb_screenshot.png)
-
-
+<img src="/screenshot.png" width="1200">
 
 How to install
 --------------
@@ -34,8 +36,6 @@ How to build
 - `$ grunt`
 - Check a zip file in `$CHROMEADB_HOME/package`
 
-
-
 Pre-requirements
 ----------------
 
@@ -45,31 +45,6 @@ Pre-requirements
 - ChromeADB for Android (Optional)
 	-  for Mousepad
 	- Go to [Github][github] or [PlayStore][chromeadb_for_android]
-
-
-
-How to use
-----------
-
-Are you an Android developer?  
-No description needed anymore :)
-
-
-
-Chrome Store
-------------
-
-[![chrome_store](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_496x150.png)][2]
-
-
-
-References
-----------
-
-- [ADB OVERVIEW.txt][3]
-- [ADB SERVICES.txt][4]
-
-
 
 License
 -------
