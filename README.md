@@ -8,11 +8,6 @@ I added some extra functionality to it:
 * Pinning apps
 * Dumping logcat
 
-
-
-When launched, you can see all devices connected to your machine if the ADB connection is successful.  
-Click a device that you want to control or monitor. And enjoy!
-
 <img src="/screenshot.png" width="1200">
 
 How to install
