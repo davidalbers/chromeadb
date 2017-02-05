@@ -218,6 +218,116 @@ adb.controller('controller', ['$scope', '$q', 'socketService', '$sce', function 
   };
 
   /**
+   * Runs a monkey test 
+   *
+   * $ adb shell monkey ... 
+   *
+   * @param serial A specific device.
+   */
+  $scope.onRunMonkey = function (serial, numberEvents) {
+
+    $scope.logMessage = {
+      cmd: 'Run Monkey',
+      res: 'Running ...'
+    };
+
+    var cmd1 = 'host:transport:' + serial;
+    var cmd2 = 'shell: monkey -v -v -v --pct-syskeys 0 --pct-anyevent 0 --pct-trackball 0 --pct-appswitch 0 --pct-majornav 0 --pct-nav 0 --throttle 100 ' + numberEvents;
+
+    $scope.getReadAllPromise(cmd1, cmd2)
+      .then(function (param) {
+        $scope.logMessage.res = "Done.";
+      });
+  };
+
+
+  /**
+   * Runs a monkey test 
+   *
+   * $ adb shell monkey ... 
+   *
+   * @param serial A specific device.
+   */
+  $scope.onDumpLogcat = function (serial) {
+
+    $scope.logMessage = {
+      cmd: 'Dump log',
+      res: 'Dumping ...'
+    };
+
+    var cmd1 = 'host:transport:' + serial;
+    var cmd2 = 'shell: logcat -d'
+
+    $scope.getReadAllPromise(cmd1, cmd2)
+      .then(function (param) {
+        $scope.logMessage.res = "Done.";
+        console.log(param);
+        download("androidLog.txt", JSON.stringify(param));
+      });
+  };
+
+  function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
+
+  /**
+   * Pins the app using commands for Android 6.0+
+   */
+  $scope.pinOs6 = function(serial) {
+      onPinApp(serial, 'shell: task_id=$(dumpsys activity | grep -A2 \"(dumpsys activity recents)\"| grep \'#\'| cut -d \' \' -f 7| cut -c 2-); am task lock $task_id');
+  }
+
+  /**
+   * Pins the app using commands for Android 5.0
+   */
+  $scope.pinOs5 = function(serial) {
+      onPinApp(serial, "shell: task_id=$(dumpsys activity | grep -A2 \"(dumpsys activity recents)\"| grep \'#\'| cut -d \' \' -f 7| cut -c 2-); am lock-task $task_id");
+  }
+
+  /**
+   * Runs App pinning command 
+   */
+  function onPinApp(serial, command) {
+
+    $scope.logMessage = {
+      cmd: 'Pin app',
+      res: 'Pinning ...'
+    };
+
+    var cmd1 = 'host:transport:' + serial;
+
+    $scope.getReadAllPromise(cmd1, command)
+      .then(function (param) {
+        $scope.logMessage.res = "Done.";
+        dismissPinDialog(serial);
+      });
+  };
+
+  function dismissPinDialog(serial) {
+    $scope.logMessage = {
+      cmd: 'Dismissing dialog',
+      res: '...'
+    };
+    var cmd1 = 'host:transport:' + serial;
+    var cmd2 = 'shell: input touchscreen tap 0 0';
+
+    $scope.getReadAllPromise(cmd1, cmd2)
+      .then(function (param) {
+        $scope.logMessage.cmd = "";
+        $scope.logMessage.res = "";
+      });
+  }
+
+  /**
    * Removes all data of the package.
    *
    * $ adb shell pm clear <package>
@@ -470,6 +580,9 @@ adb.controller('controller', ['$scope', '$q', 'socketService', '$sce', function 
             head: head,
             processes: body
           };
+        }
+        else {
+          $scope.logMessage.res = 'Error with list';
         }
       });
   };
@@ -835,5 +948,11 @@ adb.controller('controller', ['$scope', '$q', 'socketService', '$sce', function 
     var mailto = $sce.trustAsHtml('mailto:' + to + '?subject=' + title + '&body=' + body);
     return '<a href="' + mailto + '" target="_blank">Send feedback</a>';
   };
+
+  $scope.appPackageFilter = function(input) {
+    return /.*\..*\..*/.test(input);
+  };
+
+
 }]);
 

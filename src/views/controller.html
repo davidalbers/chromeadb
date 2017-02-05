@@ -1,6 +1,6 @@
 <!--controller tab-->
 
-<div class="tab-pane" id="controller">
+<div class="tab-pane" id="controller" >
 
 <div class="row">
     <div class="col-md-12">
@@ -184,44 +184,63 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row" ng-init="loadProcessList(devInfo.serial);"> 
     <div class="col-md-12">
         <div class="panel panel-primary">
-            <div class="panel-heading">Mouse Pad</div>
-            <div class="panel-body" ng-hide="mousepadEnabled == false">
-                <div class="btn-group" data-toggle="buttons" id="mousepad-size-group">
-                    <label class="btn btn-default" ng-click="setMousePadSize(devInfo.serial, 2);">
-                        <input type="radio" name="options" id="option2">Large
-                    </label>
-                    <label class="btn btn-default" ng-click="setMousePadSize(devInfo.serial, 4);">
-                        <input type="radio" name="options" id="option1">Small
-                    </label>
-                </div>
+            <div class="panel-heading">Monkey</div>
+            <div class="panel-body">
+
+                <label for="monkeyProcessSelect">Limit to package:</label>
+                <select 
+                    name="monkeyProcessSelect"
+                    ng-model="monkeyProcess" 
+                    ng-options="item[7] for item in processList.processes | filter:appPackageFilter"/>  -->
+
+                <input type="number" 
+                    class="form-control"
+                    placeholder="Number of events" 
+                    ng-model="numberEvents">
+
                 <button class="btn btn-default"
-                        style="width: 100px;"
-                        ng-click="rotateMousePad(devInfo.serial);">
-                    <span class="glyphicon glyphicon-refresh"> Rotate</span>
+                        ng-click="onRunMonkey(devInfo.serial, numberEvents);">
+                    Run
                 </button>
-                <hr/>
-                <div id="mousepad"
-                     ng-style="devResolution"
-                     ng-mousedown="mouseDown($event);"
-                     ng-mouseup="mouseUp(devInfo.serial, $event);"
-                     ng-mousemove="mouseMove(devInfo.serial, $event);"
-                     ng-mouseenter="mouseEnter(devInfo.serial);"
-                     ng-mouseleave="mouseLeave(devInfo.serial);">
-                    {{ mouseMoveLog }}
-                </div>
-            </div>
-            <div class="panel-body" ng-hide="mousepadEnabled == true" ng-bind-html="mousepadMsg"></div>
-            <div class="panel-body" ng-hide="mousepadEnabled == true || notInstalledApk == false">
+
                 <button class="btn btn-default"
-                        style="width: 200px;"
-                        ng-click="sendIntentApk(devInfo.serial);">
-                    ChromeADB for Android
+                        ng-click="pinOs6(devInfo.serial)">
+                    Pin
                 </button>
+
+                <button class="btn btn-default"
+                        ng-click="pinOs5(devInfo.serial)">
+                    Pin (5.0)
+                </button>
+
             </div>
         </div>
     </div>
 </div>
+
+
+<div class="row"> 
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Log</div>
+            <div class="panel-body">
+
+                <button 
+                    name="dumpButton"
+                    class="btn btn-default"
+                    ng-click="onDumpLogcat(devInfo.serial);">
+                    Dump 
+                </button>
+                
+                <label>(Saves to Chrome downloads, may be large file)</label>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
 </div>
